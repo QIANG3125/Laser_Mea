@@ -288,7 +288,7 @@ if(outmode == UARTbluetooth)
 			if (outmode == UARTbluetooth)
 				{
 				OS_ENTER_CRITICAL();
-				printf("ORG:%.2f ", org_data);
+				printf("ORG:%.2f \r\n", org_data);
 				OS_EXIT_CRITICAL();
 				}
 
@@ -860,6 +860,9 @@ void gen_task(void * pdata)
 			{
 				data_vaild = 0;					
 			}
+			else if(time_ps<TIME_PS_TH && err_time3>1300){		//新镜头回拨强，11米散射干扰在q:1100就能出现
+				data_vaild = 0;					
+			}
 			else if(quantify>1600 && time_ps< 2*TIME_PS_TH)	//增益过大,30米内的都去掉
 			{
 				data_vaild = 0;
@@ -874,7 +877,7 @@ void gen_task(void * pdata)
 			}
 			else 
 			{
-				data_vaild			= 1;
+				data_vaild	= 1;
 			}
             
 
@@ -883,43 +886,13 @@ void gen_task(void * pdata)
 			{
 				data_vaild= 0;
 			}
-			else if(err_time3>5000 && time_ps< TIME_PS_TH2)	//测线测墙100米之内5000以上的滤除不要
+			else if(err_time3>5000 && (1.5 * (double) time_ps) / 10000 <75)    //???
 			{
 				data_vaild= 0;
 			}
-			else if(time_ps< TIME_PS_TH2 && (err_time3>1600 && err_time3< 2000))	//100米之内处于对数拟合部分的数据全部不要  注意:测墙出现拖尾时，前面的有效数据高于1600情况下会被滤除,导致后面的错误数据输出
-			{
-				data_vaild= 0;
-			}
-			//针对测距模式进行二次滤除
-			switch (mcb.measure_mode)
-			{
-			case wall: //测墙模式数据筛选
-				if(quantify<=GAIN_TH && (time_ps < TIME_PS_TH2) && err_time3>1600) //百米之内测墙,干扰剔除  !!!注意测量50米测线别被筛出去了
-				{
-					data_vaild = 0;
-				}
-				else if(time_ps < TIME_PS_TH && err_time3 > 2200)
-				{
-					data_vaild= 0;
-				}
-				else if(err_time3>5000 && (1.5 * (double) time_ps) / 10000 <400)
-				{
-					data_vaild= 0;
-				}
-				break;
-			case line: //测线模式数据筛选
-				if((time_ps < TIME_PS_TH) && err_time3>2000)
-					{
-						data_vaild = 0;
-					}
-				else if(err_time3>5000 && (1.5 * (double) time_ps) / 10000 <75)
-					{
-						data_vaild= 0;
-					}
-				break;
-			}
-
+			
+			
+	
 			
 			//将有效数据计算原始距离并存入一个结构体数组中
 			if(data_vaild == 1)
@@ -940,7 +913,6 @@ void gen_task(void * pdata)
 		}
 		if(vaild_data_num == 0)		//该次测量没有效数据,重新测量
 		{
-		
 		delay_ms(5);
 		continue;			
 		}

@@ -210,7 +210,7 @@ unsigned char tdc_measure_group(p_result presult)
         OS_ENTER_CRITICAL();
 		laser_plus();
         OS_EXIT_CRITICAL();
-		delay_ms(1);
+		delay_ms(10);
 //		measureCylce++;
 	}while(GPIO_INTERRUPT!=0);
 	

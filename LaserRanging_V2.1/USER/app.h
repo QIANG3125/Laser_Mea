@@ -29,13 +29,13 @@ enum
 	line											//测线模式
 };
 
-//激光测距输出模式类型
+//激光测距输出模式类型11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 
 enum
 {
 	camera,
 	UARTbluetooth
 };
-#define OutModeSet camera		//输出模式设置
+#define OutModeSet UARTbluetooth		//输出模式设置
 extern unsigned char outmode;
 
 /*********************************************************************************************/
@@ -186,7 +186,7 @@ extern INT8U 			first_measure;		//是否是第一次测量
 #define STOP_THREAD3			80		//原80
 
 /* 数据筛选校准参数 */
-#define GAIN_TH 				1200	  //增益限值
+#define GAIN_TH 				1100	  //增益限值
 #define DISTANCE_TH 			21	  //距离限制
 #define TIME_PS_TH				100000 //15米的时间 
 #define TIME_PS_TH2				500000 //75米时间
