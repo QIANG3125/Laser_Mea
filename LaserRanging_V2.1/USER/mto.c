@@ -446,10 +446,10 @@ MTO* get_cur_mto()
 int adj_line_60_70_80(TIME_DATA *data,double *ans)
 {
 
-	if(data->err_time3 <=1600)
+	if(data->err_time3 <=1600 || data->time_ps< TIME_PS_TH*1.2)
 	{
 		*ans =((1.5 * (double) data->time_ps)/10000) - (4.561*sin(0.005508*((1.5 * (double) data->time_ps)/10000)+0.5009)) -batch_err;
-//		*ans= ((1.5 * (double) data->time_ps)/10000)*0.9892 - 2.636;
+//		*ans =((1.5 * (double) data->time_ps)/10000) - () -batch_err;
 	}
 	else if(data->err_time3 >1600 && data->err_time3< 2000)
 	{

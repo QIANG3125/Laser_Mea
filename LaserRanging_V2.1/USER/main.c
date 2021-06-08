@@ -855,14 +855,20 @@ void gen_task(void * pdata)
 			err_time1 = measure_data_arr[i_gen].stopresult[2] -measure_data_arr[i_gen].stopresult[1] + \
                 (measure_data_arr[i_gen].reference_index[2] -measure_data_arr[i_gen].reference_index[1]) *refclk_divisions;
 
+
+
+			
+
+
+
 			//滤除明显干扰数据
 			if ( ((quantify > GAIN_TH) && (time_ps < TIME_PS_TH))||((quantify>1400)&&(time_ps < TIME_PS_TH*2))  ||(quantify>1900&&time_ps<TIME_PS_TH*3)) //增益大，距离近的去掉,干掉干扰脉冲 (对空散射 11米左右数据)	测线30米之内的数据必须在1400之内测得
 			{
 				data_vaild = 0;					
 			}
-			else if(time_ps<TIME_PS_TH && err_time3>1300){		//新镜头回拨强，11米散射干扰在q:1100就能出现
-				data_vaild = 0;					
-			}
+//			else if(time_ps<TIME_PS_TH && err_time3>1300){		//新镜头回拨强，11米散射干扰在q:1100就能出现
+//				data_vaild = 0;					
+//			}
 			else if(quantify>1600 && time_ps< 2*TIME_PS_TH)	//增益过大,30米内的都去掉
 			{
 				data_vaild = 0;
@@ -879,14 +885,18 @@ void gen_task(void * pdata)
 			{
 				data_vaild	= 1;
 			}
-            
+
+//			OS_ENTER_CRITICAL();
+//			printf("O:%.3f  E:%d.\r\n", (1.5 * (double) time_ps) / 10000, err_time3);
+//			OS_EXIT_CRITICAL();
 
 			//滤除有效数据里面导致抖动性比较大的数据
-			if((time_ps < TIME_PS_TH) && err_time3>2000)	//测线测墙15米之内et:2000之上都滤掉
-			{
-				data_vaild= 0;
-			}
-			else if(err_time3>5000 && (1.5 * (double) time_ps) / 10000 <75)    //???
+//			if((time_ps < TIME_PS_TH) && err_time3>2000)	//测线测墙15米之内et:2000之上都滤掉
+//			{
+//				data_vaild= 0;
+//			}
+//			else 
+            if(err_time3>5000 && (1.5 * (double) time_ps) / 10000 <75)    //???
 			{
 				data_vaild= 0;
 			}

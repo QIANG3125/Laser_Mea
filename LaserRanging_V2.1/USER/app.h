@@ -35,7 +35,7 @@ enum
 	camera,
 	UARTbluetooth
 };
-#define OutModeSet UARTbluetooth		//输出模式设置
+#define OutModeSet camera		//输出模式设置
 extern unsigned char outmode;
 
 /*********************************************************************************************/

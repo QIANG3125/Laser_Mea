@@ -2,7 +2,7 @@
 
 //测距任务相关参数
 double			d_distance = 0;
-float			batch_err = 0;			//不同批次测墙补偿
+float			batch_err = -0.15;			//不同批次测墙补偿
 float			caps	  = 0;
 INT8U			level_stable = 0;
 INT8U			no_data_cnt = 0;
