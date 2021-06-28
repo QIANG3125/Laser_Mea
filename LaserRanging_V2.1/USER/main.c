@@ -869,10 +869,6 @@ void gen_task(void * pdata)
 //			else if(time_ps<TIME_PS_TH && err_time3>1300){		//新镜头回拨强，11米散射干扰在q:1100就能出现
 //				data_vaild = 0;					
 //			}
-			else if(quantify>1600 && time_ps< 2*TIME_PS_TH)	//增益过大,30米内的都去掉
-			{
-				data_vaild = 0;
-			}
 			else if (err_time3 > MAX_ERR_TIME || err_time3 <= MIN_ERR_TIME) //阈值时间差有误的去掉
 			{
 				data_vaild	= 0;
@@ -895,7 +891,7 @@ void gen_task(void * pdata)
 //			{
 //				data_vaild= 0;
 //			}
-//			else 
+//			else
             if(err_time3>5000 && (1.5 * (double) time_ps) / 10000 <75)    //???
 			{
 				data_vaild= 0;
