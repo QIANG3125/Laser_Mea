@@ -792,8 +792,6 @@ void gen_task(void * pdata)
 
 	detect_val			= 0xFFFFFFFF;
 
-	//test 
-	//OSTaskSuspend(GEN_TASK_PRIO);
 	while (1)
 		{
 //		measureCylce=0;
@@ -866,9 +864,6 @@ void gen_task(void * pdata)
 			{
 				data_vaild = 0;					
 			}
-//			else if(time_ps<TIME_PS_TH && err_time3>1300){		//新镜头回拨强，11米散射干扰在q:1100就能出现
-//				data_vaild = 0;					
-//			}
 			else if (err_time3 > MAX_ERR_TIME || err_time3 <= MIN_ERR_TIME) //阈值时间差有误的去掉
 			{
 				data_vaild	= 0;
@@ -886,13 +881,7 @@ void gen_task(void * pdata)
 //			printf("O:%.3f  E:%d.\r\n", (1.5 * (double) time_ps) / 10000, err_time3);
 //			OS_EXIT_CRITICAL();
 
-			//滤除有效数据里面导致抖动性比较大的数据
-//			if((time_ps < TIME_PS_TH) && err_time3>2000)	//测线测墙15米之内et:2000之上都滤掉
-//			{
-//				data_vaild= 0;
-//			}
-//			else
-            if(err_time3>5000 && (1.5 * (double) time_ps) / 10000 <75)    //???
+            if(err_time3>5000 && (1.5 * (double) time_ps) / 10000 <75)    //滤除抖动性大的数据
 			{
 				data_vaild= 0;
 			}
@@ -930,50 +919,7 @@ void gen_task(void * pdata)
 			{	
 				if(vaild_data_num == 1)
 					{
-						if(mcb.measure_mode==wall && vaild_Measuredata[0].distance >600)
-							{
-								cur_timedata.distance=vaild_Measuredata[0].distance;
-								cur_timedata.timedata=vaild_Measuredata[0].timedata;
-
-								if(abs(cur_timedata.distance-old_timedata.distance)<5)
-									{
-									
-	
-										OSSchedLock();		//ans_buf	ans_cnt  ans_ite 为临界资源
-										if (ans_cnt < ANS_BUF_SIZE)
-											{
-											ans_cnt++;							//更新缓冲区结果数
-											}
-										else
-											{
-												ans_cnt=0;
-											}
-							
-										if (ans_ite == ANS_BUF_SIZE - 1) //如果缓冲区已满，覆盖最开始的数据
-											{
-											ans_buf[ans_ite]	= cur_timedata.timedata;
-											ans_ite 			= 0;
-											}
-										else 
-											{
-											ans_buf[ans_ite++]	= cur_timedata.timedata;
-											}
-
-										if(outmode == UARTbluetooth)
-											printf("wallover600.\n");
-//										printf("D:",distance);
-										OSSchedUnlock();
-										
-										old_timedata.distance=cur_timedata.distance;
-										old_timedata.timedata=cur_timedata.timedata;
-									}
-								else
-									{
-										old_timedata.distance=cur_timedata.distance;
-										old_timedata.timedata=cur_timedata.timedata;
-									}
-							}
-						else if(mcb.measure_mode==line && vaild_Measuredata[0].distance >80)
+						if(mcb.measure_mode==line && vaild_Measuredata[0].distance >80)
 							{
 							
 								//将当前数据暂时存下来
@@ -1002,8 +948,6 @@ void gen_task(void * pdata)
 											{
 											ans_buf[ans_ite++]	= cur_timedata.timedata;
 											}
-//										printf("lineover.\n");
-				//						printf("D:",distance);
 										OSSchedUnlock();
 										
 										old_timedata.distance=cur_timedata.distance;
@@ -1027,33 +971,11 @@ void gen_task(void * pdata)
 
 									OSQPost(q_msg, org_data);			//发送消息队列		???局部变量可以通过消息队列发送出去？
 								}
-//								OS_ENTER_CRITICAL();
-////								printf("1_data!.\r\n");
-//		//						printf("1:%.3f.  2:%.3f.\n",vaild_Measuredata[0].distance,vaild_Measuredata[1].distance);
-//								OS_EXIT_CRITICAL();
 							}
 					
 					}
 				else	//增益大于适合的增益,回波被放大,TDC会读取两个数据
 					{
-//						OS_ENTER_CRITICAL();
-////						printf("2_data!.\r\n");
-////						printf("1:%.3f.  2:%.3f.\n",vaild_Measuredata[0].distance,vaild_Measuredata[1].distance);
-//						OS_EXIT_CRITICAL();
-
-//						if(quantify>1100 && vaild_Measuredata[1].distance <100)		//增益变大,一旦出现
-//						{
-//							OS_ENTER_CRITICAL();
-//							quantify			= LEVEL[0]; 			//设置q:1100
-//							printf("exit set 1100.\r\n");
-//							setDacValueBin(quantify);
-//							OS_EXIT_CRITICAL();
-//							continue;	//该次测量数据丢弃
-//						}
-
-						if(quantify>1600 && vaild_Measuredata[1].distance <100 && mcb.measure_mode==wall)	//	滤除雾霾天气下的前级干扰
-							continue;
-
 						for(i_gen=0; i_gen<vaild_data_num; i_gen++)
 						{
 							old_2relt_timedata[Data2_measure_cycle][i_gen]= vaild_Measuredata[i_gen];
@@ -1110,54 +1032,6 @@ void gen_task(void * pdata)
 							}
 							Data2_measure_cycle=0;
 							
-//							if(data_2_filter(old_2relt_timedata,Data2_measure_cycle,&time_data) == VALID_MEAS)	//数据有效
-//								{
-//									OSSchedLock();					//ans_buf	ans_cnt  ans_ite 为临界资源
-//									if (ans_cnt < ANS_BUF_SIZE)
-//										{
-//										ans_cnt++;							//更新缓冲区结果数
-//										}
-//									else
-//										{
-//											ans_cnt=0;
-//										}
-//						
-//									if (ans_ite == ANS_BUF_SIZE - 1) //如果缓冲区已满，覆盖最开始的数据
-//										{
-//										ans_buf[ans_ite]	= time_data;
-//										ans_ite 			= 0;
-//										}
-//									else 
-//										{
-//										ans_buf[ans_ite++]	= time_data;
-//										}
-//									if(outmode == UARTbluetooth)
-//									printf("2data.\n");
-//									OSSchedUnlock();
-//								}
-//							else if(data_2_filter(old_2relt_timedata,Data2_measure_cycle,&time_data) == DATA_ERR)
-//								{
-//								if(outmode == UARTbluetooth)
-//									printf("data_err.\n");
-//									Data2_measure_cycle=0;
-//									continue;
-//								}
-//							else if(data_2_filter(old_2relt_timedata,Data2_measure_cycle,&time_data) == Q_OUT)
-//								{
-//									Data2_measure_cycle=0;
-//									if(outmode == UARTbluetooth)
-//									printf("Q_OUT.\n");
-//									OS_ENTER_CRITICAL();
-//									level= 0;
-//									quantify			= LEVEL[0]; 			//设置q:1100
-//
-//									if(outmode == UARTbluetooth)
-//										printf("exit set 1100.\r\n");
-//									setDacValueBin(quantify);
-//									OS_EXIT_CRITICAL();
-//									continue;	//该次测量数据丢弃
-//								}
-//							Data2_measure_cycle=0;
 						}
 
 						

@@ -2,7 +2,7 @@
 
 //测距任务相关参数
 double			d_distance = 0;
-float			batch_err = 1;			//不同批次测墙补偿
+float			batch_err = 0;			//不同批次测墙补偿
 float			caps	  = 0;
 INT8U			level_stable = 0;
 INT8U			no_data_cnt = 0;
@@ -23,7 +23,7 @@ const INT16U	LEVEL[MAX_LEVEL] =
 ///* 增益档位表 */
 //const INT16U LEVEL[MAX_LEVEL] = 
 //{
-//	1800
+//	1100
 //};
 INT8U			level = 0; //档位
 
@@ -67,17 +67,20 @@ const int		refclk_divisions = 125000; //8M晶振  ,TDC参考时钟
 void out_mode_set()
 { /* 输出模式设定 */
 
+	mcb.measure_mode=line;	//测距模式不用区分，全部用测线拟合方式
+
+/*
 	if(outmode==UARTbluetooth)		//蓝牙输出调试
 		{
 		//		硬件判断测线与测墙模式		加跳帽测墙，不加测线
-			if (MODE == 1)
-				{
-				mcb.measure_mode=wall;
-				}
-			else 
-				{
+//			if (MODE == 1)
+//				{
+//				mcb.measure_mode=wall;
+//				}
+//			else 
+//				{
 				mcb.measure_mode=line;
-				}
+//				}
 		}
 	else 	//上位机输出数据
 	{
@@ -94,6 +97,9 @@ void out_mode_set()
 				mcb.measure_mode=line;
 				}
 	}
+*/
+
+
 } /* CH_DATA转double */
 
 unsigned char Mode_Judge()
@@ -520,7 +526,7 @@ INT8U data_filter(TIME_DATA* arr, unsigned char len, unsigned int diff_time, TIM
 
 	}
 	// 取最大计数分类数据中的中值
-	if(max_ele<3)
+	if(max_ele<4)
 		return NON_ERR;
 	else
 		*ans= arr[((max_pos << 1) + max_ele) / 2];

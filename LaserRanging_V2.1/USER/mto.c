@@ -445,19 +445,27 @@ MTO* get_cur_mto()
 
 int adj_line_60_70_80(TIME_DATA *data,double *ans)
 {
-
 	if(data->err_time3 <=1600 || data->time_ps< TIME_PS_TH*1.2)
 	{
 		*ans =((1.5 * (double) data->time_ps)/10000) - (4.561*sin(0.005508*((1.5 * (double) data->time_ps)/10000)+0.5009)) -batch_err;
-//		*ans =((1.5 * (double) data->time_ps)/10000) - () -batch_err;
+		
+		printf("A_\r\n");
+
 	}
 	else if(data->err_time3 >1600 && data->err_time3< 2000)
 	{
 		*ans =  ((1.5 * (double) data->time_ps)/10000) - 0.8541 * my_log(-10.9372 * (data->err_time3) + 11430) + 3.019 - coe -0.3 -batch_err;
+
+	
+		printf("B_\r\n");
+
 	}
 	else if(data->err_time3 >= 2000)
 	{
 		*ans = ((1.5 * (double) data->time_ps)/10000) - 0.0004 * (data->err_time3) - 4.0737 - coe -0.3 -batch_err;
+
+
+		printf("C_\r\n");
 	}
 	else
 	{

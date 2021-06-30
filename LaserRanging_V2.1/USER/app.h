@@ -29,7 +29,7 @@ enum
 	line											//测线模式
 };
 
-//激光测距输出模式类型11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 
+//激光测距输出模式类型
 enum
 {
 	camera,
@@ -48,6 +48,8 @@ extern const INT16U	LEVEL[MAX_LEVEL];
 //#define MAX_LEVEL 1
 /////* 增益档位表 */
 //extern const INT16U LEVEL[MAX_LEVEL];
+
+
 extern INT8U			level;
 
 

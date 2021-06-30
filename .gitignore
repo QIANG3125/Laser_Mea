@@ -6,4 +6,6 @@ LaserRanging_V2.1/USER/Listings/*
 LaserMeasure.*
 *.xml
 
+LaserRanging_V2.1/USER/*.ini
+LaserRanging_V2.1/USER/*.txt
 
